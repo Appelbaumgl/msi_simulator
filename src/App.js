@@ -7,23 +7,30 @@ class App extends Component {
     constructor() {
         super();
         this.state = {
-            isExtended: false,
-            lat: 43.0440,
-            lng: -87.9084,
-            zoom: 15
+            zoom: 15,
+            Appointment: {
+                Latitude: 43.0440,
+                Longitude: -87.9084,
+            },
+            ServiceTech: {
+                Latitude: 43.0440,
+                Longitude: -87.9084,
+            },
+            Company: {
+
+            }
         };
     }
 
     render() {
-        const position = [this.state.lat, this.state.lng];
-
         return (
             <div className="App">
-                <Map className={"Map"} attributionControl={false} center={position} zoom={this.state.zoom}>
+                <Map className={"Map"} attributionControl={false} center={[this.state.Appointment.Latitude, this.state.Appointment.Longitude]} zoom={this.state.zoom}>
                     <TileLayer url="http://maps.servicepro10.com/{z}/{x}/{y}.png"/>
-                    <Marker position={position}>
+                    <Marker position={[this.state.ServiceTech.Latitude, this.state.ServiceTech.Longitude]} draggable={true}>
                     </Marker>
                 </Map>
+                <button className={"ChangeDataButton"}>Change Data</button>
             </div>
         );
     }

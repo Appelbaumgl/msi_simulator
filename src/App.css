@@ -1,4 +1,10 @@
 .Map {
   width: 100vw;
-  height: 90vh;
+  height: 95vh;
+}
+
+.ChangeDataButton {
+  display: block;
+  height: 5vh;
+  width: 100vw;
 }
