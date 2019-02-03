@@ -8,3 +8,26 @@
   height: 5vh;
   width: 100vw;
 }
+
+.Title {
+  display: inline-block;
+  font-weight: bold;
+  width: 100%;
+}
+
+.Input {
+  display: inline-block;
+  width: 100%;
+}
+
+.InputLeft {
+  width: 30%;
+  float: left;
+  text-align: right;
+}
+
+.InputRight {
+  width: 65%;
+  float: right;
+  text-align: left;
+}

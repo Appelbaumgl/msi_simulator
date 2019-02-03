@@ -13,6 +13,10 @@ class App extends Component {
             Appointment: {
                 Latitude: 43.0440,
                 Longitude: -87.9084,
+                Address: undefined,
+                ScheduledDateTime: undefined,
+                AppointmentNumber: undefined,
+                Notes: undefined
             },
             ServiceTech: {
                 Latitude: 43.0440,
@@ -33,10 +37,42 @@ class App extends Component {
                     </Marker>
                 </Map>
                 <button className={"ChangeDataButton"} onClick={this.openPopup.bind(this)}>Change Data</button>
-                <Dialog open={this.state.popupOpen}>
+                <Dialog 
+                    open={this.state.popupOpen}
+                    fullWidth = {true}
+                    maxWidth = {"sm"}
+                >
                     <DialogTitle>Service Tech Info</DialogTitle>
                     <DialogContent>
-                        <div></div>
+                        <div>
+                            <div className={"Title"}>Appointment</div>
+                            <div className={"Input"}>
+                                <div className={"InputLeft"}>Address</div>
+                                <input className={"InputRight"} type="text" value={this.state.Appointment.Address}/>
+                            </div>
+                            <div className={"Input"}>
+                                <div className={"InputLeft"}>Scheduled Date Time</div>
+                                <input className={"InputRight"} type="datetime-local" value={this.state.Appointment.ScheduledDateTime}/>
+                            </div>
+                            <div className={"Input"}>
+                                <div className={"InputLeft"}>Appointment Number</div>
+                                <input className={"InputRight"} type="text" value={this.state.Appointment.AppointmentNumber}/>
+                            </div>
+                            <div className={"Input"}>
+                                <div className={"InputLeft"}>Notes</div>
+                                <input className={"InputRight"} type="text" value={this.state.Appointment.Notes}/>
+                            </div>
+                            <div className={"Title"}>Service Tech</div>
+                            <div className={"Input"}>
+                                <div className={"InputLeft"}></div>
+                                <input className={"InputRight"} type="text"/>
+                            </div>
+                            <div className={"Title"}>Company</div>
+                            <div className={"Input"}>
+                                <div className={"InputLeft"}></div>
+                                <input className={"InputRight"} type="text"/>
+                            </div>
+                        </div>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.closePopup.bind(this)}>
