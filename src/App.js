@@ -46,31 +46,37 @@ class App extends Component {
                     <DialogContent>
                         <div>
                             <div className={"Title"}>Appointment</div>
-                            <div className={"Input"}>
-                                <div className={"InputLeft"}>Address</div>
-                                <input className={"InputRight"} type="text" value={this.state.Appointment.Address}/>
-                            </div>
-                            <div className={"Input"}>
-                                <div className={"InputLeft"}>Scheduled Date Time</div>
-                                <input className={"InputRight"} type="datetime-local" value={this.state.Appointment.ScheduledDateTime}/>
-                            </div>
-                            <div className={"Input"}>
-                                <div className={"InputLeft"}>Appointment Number</div>
-                                <input className={"InputRight"} type="text" value={this.state.Appointment.AppointmentNumber}/>
-                            </div>
-                            <div className={"Input"}>
-                                <div className={"InputLeft"}>Notes</div>
-                                <input className={"InputRight"} type="text" value={this.state.Appointment.Notes}/>
+                            <div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Address</div>
+                                    <input className={"InputRight"} type="text" value={this.state.Appointment.Address}/>
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Scheduled Date Time</div>
+                                    <input className={"InputRight"} type="datetime-local" value={this.state.Appointment.ScheduledDateTime}/>
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Appointment Number</div>
+                                    <input className={"InputRight"} type="text" value={this.state.Appointment.AppointmentNumber}/>
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Notes</div>
+                                    <input className={"InputRight"} type="text" value={this.state.Appointment.Notes}/>
+                                </div>
                             </div>
                             <div className={"Title"}>Service Tech</div>
-                            <div className={"Input"}>
-                                <div className={"InputLeft"}></div>
-                                <input className={"InputRight"} type="text"/>
+                            <div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}></div>
+                                    <input className={"InputRight"} type="text"/>
+                                </div>
                             </div>
                             <div className={"Title"}>Company</div>
-                            <div className={"Input"}>
-                                <div className={"InputLeft"}></div>
-                                <input className={"InputRight"} type="text"/>
+                            <div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}></div>
+                                    <input className={"InputRight"} type="text"/>
+                                </div>
                             </div>
                         </div>
                     </DialogContent>
