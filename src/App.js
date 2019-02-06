@@ -14,6 +14,7 @@ class App extends Component {
                 Latitude: 43.0440,
                 Longitude: -87.9084,
                 Address: undefined,
+                ServiceTechRating: undefined,
                 ScheduledDateTime: undefined,
                 AppointmentNumber: undefined,
                 Notes: undefined
@@ -21,9 +22,16 @@ class App extends Component {
             ServiceTech: {
                 Latitude: 43.0440,
                 Longitude: -87.9084,
+                VehicleDescription: undefined,
+                VehiclePictureLink: undefined,
+                PictureLink: undefined,
+                EmailAddress: undefined,
+                PhoneNumber: undefined,
+                Name: undefined
             },
             Company: {
-
+                LogoLink: undefined,
+                Name: undefined
             }
         };
     }
