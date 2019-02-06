@@ -10,38 +10,36 @@ class App extends Component {
         this.state = {
             zoom: 15,
             popupOpen: false,
-            Appointment: {
-                Latitude: 43.0440,
-                Longitude: -87.9084,
-                Address: undefined,
-                ServiceTechRating: undefined,
-                ScheduledDateTime: undefined,
-                AppointmentNumber: undefined,
-                Notes: undefined
-            },
-            ServiceTech: {
-                Latitude: 43.0440,
-                Longitude: -87.9084,
-                VehicleDescription: undefined,
-                VehiclePictureLink: undefined,
-                PictureLink: undefined,
-                EmailAddress: undefined,
-                PhoneNumber: undefined,
-                Name: undefined
-            },
-            Company: {
-                LogoLink: undefined,
-                Name: undefined
-            }
+            Appointment_Latitude: 43.0440,
+            Appointment_Longitude: -87.9084,
+            Appointment_Address: "",
+            Appointment_ServiceTechRating: "",
+            Appointment_ScheduledDateTime: "",
+            Appointment_AppointmentNumber: "",
+            Appointment_Notes: "",
+            ServiceTech_Latitude: 43.0440,
+            ServiceTech_Longitude: -87.9084,
+            ServiceTech_VehicleDescription: "",
+            ServiceTech_VehiclePictureLink: "",
+            ServiceTech_PictureLink: "",
+            ServiceTech_EmailAddress: "",
+            ServiceTech_PhoneNumber: "",
+            ServiceTech_Name: "",
+            Company_LogoLink: "",
+            Company_Name: ""
         };
+    }
+
+    componentDidMount() {
+        
     }
 
     render() {
         return (
             <div className="App">
-                <Map className={"Map"} attributionControl={false} center={[this.state.Appointment.Latitude, this.state.Appointment.Longitude]} zoom={this.state.zoom}>
+                <Map className={"Map"} attributionControl={false} center={[this.state.Appointment_Latitude, this.state.Appointment_Longitude]} zoom={this.state.zoom}>
                     <TileLayer url="http://maps.servicepro10.com/{z}/{x}/{y}.png"/>
-                    <Marker position={[this.state.ServiceTech.Latitude, this.state.ServiceTech.Longitude]} draggable={true}>
+                    <Marker position={[this.state.ServiceTech_Latitude, this.state.ServiceTech_Longitude]} draggable={true}>
                     </Marker>
                 </Map>
                 <button className={"ChangeDataButton"} onClick={this.openPopup.bind(this)}>Change Data</button>
@@ -57,33 +55,61 @@ class App extends Component {
                             <div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Address</div>
-                                    <input className={"InputRight"} type="text" value={this.state.Appointment.Address}/>
+                                    {this.createInput("Appointment_Address", "text")}
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Service Tech Rating</div>
+                                    {this.createInput("Appointment_ServiceTechRating", "number")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Scheduled Date Time</div>
-                                    <input className={"InputRight"} type="datetime-local" value={this.state.Appointment.ScheduledDateTime}/>
+                                    {this.createInput("Appointment_ScheduledDateTime", "datetime-local")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Appointment Number</div>
-                                    <input className={"InputRight"} type="text" value={this.state.Appointment.AppointmentNumber}/>
+                                    {this.createInput("Appointment_AppointmentNumber", "text")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Notes</div>
-                                    <input className={"InputRight"} type="text" value={this.state.Appointment.Notes}/>
+                                    {this.createInput("Appointment_Notes", "text")}
                                 </div>
                             </div>
                             <div className={"Title"}>Service Tech</div>
                             <div>
                                 <div className={"Input"}>
-                                    <div className={"InputLeft"}></div>
-                                    <input className={"InputRight"} type="text"/>
+                                    <div className={"InputLeft"}>Vehicle Description</div>
+                                    {this.createInput("ServiceTech_VehicleDescription", "text")}
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Vehicle Picture Link</div>
+                                    {this.createInput("ServiceTech_VehiclePictureLink", "url")}
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Picture Link</div>
+                                    {this.createInput("ServiceTech_PictureLink", "url")}
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Email Address</div>
+                                    {this.createInput("ServiceTech_EmailAddress", "email")}
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Phone Number</div>
+                                    {this.createInput("ServiceTech_PhoneNumber", "tel")}
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Name</div>
+                                    {this.createInput("ServiceTech_Name", "text")}
                                 </div>
                             </div>
                             <div className={"Title"}>Company</div>
                             <div>
                                 <div className={"Input"}>
-                                    <div className={"InputLeft"}></div>
-                                    <input className={"InputRight"} type="text"/>
+                                    <div className={"InputLeft"}>Logo Link</div>
+                                    {this.createInput("Company_LogoLink", "url")}
+                                </div>
+                                <div className={"Input"}>
+                                    <div className={"InputLeft"}>Name</div>
+                                    {this.createInput("Company_Name", "text")}
                                 </div>
                             </div>
                         </div>
@@ -98,12 +124,22 @@ class App extends Component {
         );
     }
 
+    createInput(property, type) {
+        var className = "InputRight";
+        var value = this.state[property];
+        var onChange = (e) => {
+            this.setState({ [property]: e.target.value })
+        };
+
+        return <input className={className} type={type} value={value} onChange={onChange}/>
+    }
+
     openPopup() {
-        this.setState({ popupOpen: true })
+        this.setState({ popupOpen: true });
     }
 
     closePopup() {
-        this.setState({ popupOpen: false })
+        this.setState({ popupOpen: false });
     }
 
 }
