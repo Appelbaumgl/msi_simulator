@@ -31,7 +31,13 @@ class App extends Component {
     }
 
     componentDidMount() {
-        
+        var apiUrl = "https://localhost:44352/api/";
+        var url = window.location.href;
+        var appointmentId = url.slice(url.lastIndexOf("/") + 1);
+
+        fetch(`${apiUrl}Appointment/${appointmentId}`)
+            .then(response => response.json())
+            .then((response) => { console.log(response); });
     }
 
     render() {
