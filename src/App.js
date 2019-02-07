@@ -5,6 +5,9 @@ import "./App.css"
 
 class App extends Component {
 
+    apiUrl = "https://localhost:44352/api";
+    apiKey = "apikeytest";
+
     constructor() {
         super();
         this.state = {
@@ -18,21 +21,24 @@ class App extends Component {
     }
 
     componentDidMount() {
-        var apiUrl = "https://localhost:44352/api/";
+        this.loadData();
+    }
+
+    loadData() {
         var url = window.location.href;
         var appointmentId = url.slice(url.lastIndexOf("/") + 1);
 
-        fetch(`${apiUrl}Appointment/${appointmentId}`)
+        fetch(`${this.apiUrl}/Appointment/${appointmentId}`)
             .then(appointment => appointment.json())
             .then((appointment) => {
                 this.updateState("Appointment", appointment);
 
-                fetch(`${apiUrl}ServiceTech/${appointment.ServiceTechId}`)
+                fetch(`${this.apiUrl}/ServiceTech/${appointment.ServiceTechId}`)
                     .then(serviceTech => serviceTech.json())
                     .then((serviceTech) => {
                         this.updateState("ServiceTech", serviceTech);
 
-                        fetch(`${apiUrl}Company/${serviceTech.CompanyId}`)
+                        fetch(`${this.apiUrl}/Company/${serviceTech.CompanyId}`)
                             .then(company => company.json())
                             .then((company) => {
                                 this.updateState("Company", company);
@@ -48,13 +54,49 @@ class App extends Component {
         });
     }
 
+    initializeServiceTechMarker = (ref) => {
+        this.initializeMarker("ServiceTech", ref);
+    }
+
+    initializeAppointmentMarker = (ref) => {
+        this.initializeMarker("Appointment", ref);
+    }
+
+    initializeMarker(entity, ref) {
+        if (ref) {
+            ref.leafletElement.on("dragend", (e) => {
+                var latLng = e.target.getLatLng();
+
+                fetch(`${this.apiUrl}/${entity}/${this.state[`${entity}_Id`]}`, {
+                    method: "PATCH",
+                    headers: {
+                        "API-Key": this.apiKey,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify([
+                        {
+                            op: "replace",
+                            path: "Latitude",
+                            value: latLng.lat
+                        },
+                        {
+                            op: "replace",
+                            path: "Longitude",
+                            value: latLng.lng
+                        }
+                    ])
+                });
+            });
+        }
+    }
+
     render() {
         return (
             <div className="App">
                 <Map className={"Map"} attributionControl={false} center={[this.state.Appointment_Latitude, this.state.Appointment_Longitude]} zoom={this.state.zoom}>
                     <TileLayer url="http://maps.servicepro10.com/{z}/{x}/{y}.png"/>
-                    <Marker position={[this.state.ServiceTech_Latitude, this.state.ServiceTech_Longitude]} draggable={true}>
-                    </Marker>
+                    <Marker ref={this.initializeServiceTechMarker} position={[this.state.ServiceTech_Latitude, this.state.ServiceTech_Longitude]} draggable={true}/>
+                    <Marker ref={this.initializeAppointmentMarker} position={[this.state.Appointment_Latitude, this.state.Appointment_Longitude]} draggable={true}/>
                 </Map>
                 <button className={"ChangeDataButton"} onClick={this.openPopup.bind(this)}>Change Data</button>
                 <Dialog 
@@ -158,7 +200,7 @@ class App extends Component {
     closePopup(update) {
 
         if (update) {
-            
+
         }
 
         this.setState({ popupOpen: false });
