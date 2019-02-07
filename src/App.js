@@ -12,21 +12,8 @@ class App extends Component {
             popupOpen: false,
             Appointment_Latitude: 43.0440,
             Appointment_Longitude: -87.9084,
-            Appointment_Address: "",
-            Appointment_ServiceTechRating: "",
-            Appointment_ScheduledDateTime: "",
-            Appointment_AppointmentNumber: "",
-            Appointment_Notes: "",
             ServiceTech_Latitude: 43.0440,
-            ServiceTech_Longitude: -87.9084,
-            ServiceTech_VehicleDescription: "",
-            ServiceTech_VehiclePictureLink: "",
-            ServiceTech_PictureLink: "",
-            ServiceTech_EmailAddress: "",
-            ServiceTech_PhoneNumber: "",
-            ServiceTech_Name: "",
-            Company_LogoLink: "",
-            Company_Name: ""
+            ServiceTech_Longitude: -87.9084
         };
     }
 
@@ -36,8 +23,29 @@ class App extends Component {
         var appointmentId = url.slice(url.lastIndexOf("/") + 1);
 
         fetch(`${apiUrl}Appointment/${appointmentId}`)
-            .then(response => response.json())
-            .then((response) => { console.log(response); });
+            .then(appointment => appointment.json())
+            .then((appointment) => {
+                this.updateState("Appointment", appointment);
+
+                fetch(`${apiUrl}ServiceTech/${appointment.ServiceTechId}`)
+                    .then(serviceTech => serviceTech.json())
+                    .then((serviceTech) => {
+                        this.updateState("ServiceTech", serviceTech);
+
+                        fetch(`${apiUrl}Company/${serviceTech.CompanyId}`)
+                            .then(company => company.json())
+                            .then((company) => {
+                                this.updateState("Company", company);
+                            });
+                    });
+            });
+    }
+
+    updateState(entity, data) {
+        var keys = Object.keys(data);
+        keys.forEach((key) => {
+            this.setState({ [`${entity}_${key}`]: data[key] || "" });
+        });
     }
 
     render() {
@@ -121,7 +129,10 @@ class App extends Component {
                         </div>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.closePopup.bind(this)}>
+                        <Button onClick={() => { this.closePopup(true); }}>
+                            Update
+                        </Button>
+                        <Button onClick={() => { this.closePopup(false); }}>
                             CLOSE
                         </Button>
                     </DialogActions>
@@ -144,7 +155,12 @@ class App extends Component {
         this.setState({ popupOpen: true });
     }
 
-    closePopup() {
+    closePopup(update) {
+
+        if (update) {
+            
+        }
+
         this.setState({ popupOpen: false });
     }
 
