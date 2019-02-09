@@ -187,23 +187,100 @@ class App extends Component {
         var className = "InputRight";
         var value = this.state[property];
         var onChange = (e) => {
-            this.setState({ [property]: e.target.value })
+            this.setState({ [property]: e.target.value });
         };
 
         return <input className={className} type={type} value={value} onChange={onChange}/>
     }
 
     openPopup() {
+        this.priorState = this.state;
         this.setState({ popupOpen: true });
     }
 
     closePopup(update) {
-
         if (update) {
-
+            this.updateEntities();
+        } else {
+            Object.keys(this.priorState).forEach((key) => {
+                this.setState({ [key]: this.priorState[key] });
+            });
         }
 
         this.setState({ popupOpen: false });
+    }
+
+    updateEntities() {
+        var appointmentPatches = [];
+        var serviceTechPatches = [];
+        var companyPatches = [];
+
+        Object.keys(this.state).forEach((key) => {
+            var split = key.split("_");
+            if (split.length > 1 && split[1] !== "Id") {
+                var entity = split[0];
+                var column = split[1];
+
+                switch (entity) {
+                    case "Appointment":
+                        if (this.state[key]) {
+                            appointmentPatches.push({
+                                op: "replace",
+                                path: column,
+                                value: this.state[key]
+                            });
+                        }
+                        break;
+                    case "ServiceTech":
+                        if (this.state[key]) {
+                            serviceTechPatches.push({
+                                op: "replace",
+                                path: column,
+                                value: this.state[key]
+                            });
+                        }
+                        break;
+                    case "Company":
+                        if (this.state[key]) {
+                            companyPatches.push({
+                                op: "replace",
+                                path: column,
+                                value: this.state[key]
+                            });
+                        }
+                        break;
+                    default: 
+                        break;
+                };
+            }
+        });
+
+        fetch(`${this.apiUrl}/Appointment/${this.state.Appointment_Id}`, {
+            method: "PATCH",
+            headers: {
+                "API-Key": this.apiKey,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(appointmentPatches)
+        });
+
+        fetch(`${this.apiUrl}/ServiceTech/${this.state.ServiceTech_Id}`, {
+            method: "PATCH",
+            headers: {
+                "API-Key": this.apiKey,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(serviceTechPatches)
+        });
+
+        fetch(`${this.apiUrl}/Company/${this.state.Company_Id}`, {
+            method: "PATCH",
+            headers: {
+                "API-Key": this.apiKey,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(companyPatches)
+        });
     }
 
 }
