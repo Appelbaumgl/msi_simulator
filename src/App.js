@@ -6,17 +6,20 @@ import "./App.css"
 class App extends Component {
 
     apiUrl = "https://localhost:44352/api";
-    apiKey = "apikeytest";
+    headers = {
+        "API-Key": "apikeytest",
+        "Content-Type": "application/json"
+    }
 
     constructor() {
         super();
         this.state = {
             zoom: 15,
             popupOpen: false,
-            Appointment_Latitude: 43.0440,
-            Appointment_Longitude: -87.9084,
-            ServiceTech_Latitude: 43.0440,
-            ServiceTech_Longitude: -87.9084
+            Appointment_Latitude: 0,
+            Appointment_Longitude: 0,
+            ServiceTech_Latitude: 0,
+            ServiceTech_Longitude: 0
         };
     }
 
@@ -69,10 +72,7 @@ class App extends Component {
 
                 fetch(`${this.apiUrl}/${entity}/${this.state[`${entity}_Id`]}`, {
                     method: "PATCH",
-                    headers: {
-                        "API-Key": this.apiKey,
-                        "Content-Type": "application/json"
-                    },
+                    headers: this.headers,
                     body: JSON.stringify([
                         {
                             op: "replace",
@@ -95,8 +95,16 @@ class App extends Component {
             <div className="App">
                 <Map className={"Map"} attributionControl={false} center={[this.state.Appointment_Latitude, this.state.Appointment_Longitude]} zoom={this.state.zoom}>
                     <TileLayer url="http://maps.servicepro10.com/{z}/{x}/{y}.png"/>
-                    <Marker ref={this.initializeServiceTechMarker} position={[this.state.ServiceTech_Latitude, this.state.ServiceTech_Longitude]} draggable={true}/>
-                    <Marker ref={this.initializeAppointmentMarker} position={[this.state.Appointment_Latitude, this.state.Appointment_Longitude]} draggable={true}/>
+                    <Marker
+                        ref={this.initializeServiceTechMarker}
+                        position={[this.state.ServiceTech_Latitude, this.state.ServiceTech_Longitude]}
+                        draggable={true}
+                    />
+                    <Marker
+                        ref={this.initializeAppointmentMarker}
+                        position={[this.state.Appointment_Latitude, this.state.Appointment_Longitude]}
+                        draggable={true}
+                    />
                 </Map>
                 <button className={"ChangeDataButton"} onClick={this.openPopup.bind(this)}>Change Data</button>
                 <Dialog 
@@ -257,28 +265,19 @@ class App extends Component {
 
         fetch(`${this.apiUrl}/Appointment/${this.state.Appointment_Id}`, {
             method: "PATCH",
-            headers: {
-                "API-Key": this.apiKey,
-                "Content-Type": "application/json"
-            },
+            headers: this.headers,
             body: JSON.stringify(appointmentPatches)
         });
 
         fetch(`${this.apiUrl}/ServiceTech/${this.state.ServiceTech_Id}`, {
             method: "PATCH",
-            headers: {
-                "API-Key": this.apiKey,
-                "Content-Type": "application/json"
-            },
+            headers: this.headers,
             body: JSON.stringify(serviceTechPatches)
         });
 
         fetch(`${this.apiUrl}/Company/${this.state.Company_Id}`, {
             method: "PATCH",
-            headers: {
-                "API-Key": this.apiKey,
-                "Content-Type": "application/json"
-            },
+            headers: this.headers,
             body: JSON.stringify(companyPatches)
         });
     }
