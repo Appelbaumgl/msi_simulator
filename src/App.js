@@ -16,10 +16,15 @@ class App extends Component {
         this.state = {
             zoom: 15,
             popupOpen: false,
-            Appointment_Latitude: 0,
-            Appointment_Longitude: 0,
-            ServiceTech_Latitude: 0,
-            ServiceTech_Longitude: 0
+            Appointment: {
+                Latitude: 0,
+                Longitude: 0
+            },
+            ServiceTech: {
+                Latitude: 0,
+                Longitude: 0
+            },
+            Company:{}
         };
     }
 
@@ -34,27 +39,20 @@ class App extends Component {
         fetch(`${this.apiUrl}/Appointment/${appointmentId}`)
             .then(appointment => appointment.json())
             .then((appointment) => {
-                this.updateState("Appointment", appointment);
+                this.setState({ Appointment: appointment });
 
                 fetch(`${this.apiUrl}/ServiceTech/${appointment.ServiceTechId}`)
                     .then(serviceTech => serviceTech.json())
                     .then((serviceTech) => {
-                        this.updateState("ServiceTech", serviceTech);
+                        this.setState({ ServiceTech: serviceTech });
 
                         fetch(`${this.apiUrl}/Company/${serviceTech.CompanyId}`)
                             .then(company => company.json())
                             .then((company) => {
-                                this.updateState("Company", company);
+                                this.setState({ Company: company });
                             });
                     });
             });
-    }
-
-    updateState(entity, data) {
-        var keys = Object.keys(data);
-        keys.forEach((key) => {
-            this.setState({ [`${entity}_${key}`]: data[key] || "" });
-        });
     }
 
     initializeServiceTechMarker = (ref) => {
@@ -70,7 +68,7 @@ class App extends Component {
             ref.leafletElement.on("dragend", (e) => {
                 var latLng = e.target.getLatLng();
 
-                fetch(`${this.apiUrl}/${entity}/${this.state[`${entity}_Id`]}`, {
+                fetch(`${this.apiUrl}/${entity}/${this.state[entity].Id}`, {
                     method: "PATCH",
                     headers: this.headers,
                     body: JSON.stringify([
@@ -93,16 +91,16 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Map className={"Map"} attributionControl={false} center={[this.state.Appointment_Latitude, this.state.Appointment_Longitude]} zoom={this.state.zoom}>
+                <Map className={"Map"} attributionControl={false} center={[this.state.Appointment.Latitude, this.state.Appointment.Longitude]} zoom={this.state.zoom}>
                     <TileLayer url="http://maps.servicepro10.com/{z}/{x}/{y}.png"/>
                     <Marker
                         ref={this.initializeServiceTechMarker}
-                        position={[this.state.ServiceTech_Latitude, this.state.ServiceTech_Longitude]}
+                        position={[this.state.ServiceTech.Latitude, this.state.ServiceTech.Longitude]}
                         draggable={true}
                     />
                     <Marker
                         ref={this.initializeAppointmentMarker}
-                        position={[this.state.Appointment_Latitude, this.state.Appointment_Longitude]}
+                        position={[this.state.Appointment.Latitude, this.state.Appointment.Longitude]}
                         draggable={true}
                     />
                 </Map>
@@ -119,61 +117,61 @@ class App extends Component {
                             <div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Address</div>
-                                    {this.createInput("Appointment_Address", "text")}
+                                    {this.createInput("Appointment", "Address", "text")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Service Tech Rating</div>
-                                    {this.createInput("Appointment_ServiceTechRating", "number")}
+                                    {this.createInput("Appointment", "ServiceTechRating", "number")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Scheduled Date Time</div>
-                                    {this.createInput("Appointment_ScheduledDateTime", "datetime-local")}
+                                    {this.createInput("Appointment", "ScheduledDateTime", "datetime-local")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Appointment Number</div>
-                                    {this.createInput("Appointment_AppointmentNumber", "text")}
+                                    {this.createInput("Appointment", "AppointmentNumber", "text")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Notes</div>
-                                    {this.createInput("Appointment_Notes", "text")}
+                                    {this.createInput("Appointment", "Notes", "text")}
                                 </div>
                             </div>
                             <div className={"Title"}>Service Tech</div>
                             <div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Vehicle Description</div>
-                                    {this.createInput("ServiceTech_VehicleDescription", "text")}
+                                    {this.createInput("ServiceTech", "VehicleDescription", "text")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Vehicle Picture Link</div>
-                                    {this.createInput("ServiceTech_VehiclePictureLink", "url")}
+                                    {this.createInput("ServiceTech", "VehiclePictureLink", "url")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Picture Link</div>
-                                    {this.createInput("ServiceTech_PictureLink", "url")}
+                                    {this.createInput("ServiceTech", "PictureLink", "url")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Email Address</div>
-                                    {this.createInput("ServiceTech_EmailAddress", "email")}
+                                    {this.createInput("ServiceTech", "EmailAddress", "email")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Phone Number</div>
-                                    {this.createInput("ServiceTech_PhoneNumber", "tel")}
+                                    {this.createInput("ServiceTech", "PhoneNumber", "tel")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Name</div>
-                                    {this.createInput("ServiceTech_Name", "text")}
+                                    {this.createInput("ServiceTech", "Name", "text")}
                                 </div>
                             </div>
                             <div className={"Title"}>Company</div>
                             <div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Logo Link</div>
-                                    {this.createInput("Company_LogoLink", "url")}
+                                    {this.createInput("Company", "LogoLink", "url")}
                                 </div>
                                 <div className={"Input"}>
                                     <div className={"InputLeft"}>Name</div>
-                                    {this.createInput("Company_Name", "text")}
+                                    {this.createInput("Company", "Name", "text")}
                                 </div>
                             </div>
                         </div>
@@ -191,11 +189,13 @@ class App extends Component {
         );
     }
 
-    createInput(property, type) {
+    createInput(table, column, type) {
         var className = "InputRight";
-        var value = this.state[property];
+        var value = this.state[table][column] || "";
         var onChange = (e) => {
-            this.setState({ [property]: e.target.value });
+            var entity = this.state[table]
+            entity[column] = e.target.value;
+            this.setState({ [table]: entity });
         };
 
         return <input className={className} type={type} value={value} onChange={onChange}/>
@@ -223,59 +223,43 @@ class App extends Component {
         var serviceTechPatches = [];
         var companyPatches = [];
 
-        Object.keys(this.state).forEach((key) => {
-            var split = key.split("_");
-            if (split.length > 1 && split[1] !== "Id") {
-                var entity = split[0];
-                var column = split[1];
-
-                switch (entity) {
-                    case "Appointment":
-                        if (this.state[key]) {
-                            appointmentPatches.push({
-                                op: "replace",
-                                path: column,
-                                value: this.state[key]
-                            });
-                        }
-                        break;
-                    case "ServiceTech":
-                        if (this.state[key]) {
-                            serviceTechPatches.push({
-                                op: "replace",
-                                path: column,
-                                value: this.state[key]
-                            });
-                        }
-                        break;
-                    case "Company":
-                        if (this.state[key]) {
-                            companyPatches.push({
-                                op: "replace",
-                                path: column,
-                                value: this.state[key]
-                            });
-                        }
-                        break;
-                    default: 
-                        break;
-                };
-            }
+        Object.keys(this.state.Appointment).forEach((key) => {
+            appointmentPatches.push({
+                op: "replace",
+                path: key,
+                value: this.state.Appointment[key]
+            });
         });
 
-        fetch(`${this.apiUrl}/Appointment/${this.state.Appointment_Id}`, {
+        Object.keys(this.state.ServiceTech).forEach((key) => {
+            serviceTechPatches.push({
+                op: "replace",
+                path: key,
+                value: this.state.ServiceTech[key]
+            });
+        });
+
+        Object.keys(this.state.Company).forEach((key) => {
+            companyPatches.push({
+                op: "replace",
+                path: key,
+                value: this.state.Company[key]
+            });
+        });
+        
+        fetch(`${this.apiUrl}/Appointment/${this.state.Appointment.Id}`, {
             method: "PATCH",
             headers: this.headers,
             body: JSON.stringify(appointmentPatches)
         });
 
-        fetch(`${this.apiUrl}/ServiceTech/${this.state.ServiceTech_Id}`, {
+        fetch(`${this.apiUrl}/ServiceTech/${this.state.ServiceTech.Id}`, {
             method: "PATCH",
             headers: this.headers,
             body: JSON.stringify(serviceTechPatches)
         });
 
-        fetch(`${this.apiUrl}/Company/${this.state.Company_Id}`, {
+        fetch(`${this.apiUrl}/Company/${this.state.Company.Id}`, {
             method: "PATCH",
             headers: this.headers,
             body: JSON.stringify(companyPatches)
