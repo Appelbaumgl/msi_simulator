@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Map, TileLayer, Marker } from "react-leaflet";
+import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import { Button, Dialog, DialogTitle, DialogActions, DialogContent } from '@material-ui/core/';
 import "./App.css"
 
@@ -97,12 +97,20 @@ class App extends Component {
                         ref={this.initializeServiceTechMarker}
                         position={[this.state.ServiceTech.Latitude, this.state.ServiceTech.Longitude]}
                         draggable={true}
-                    />
+                    >
+                        <Popup>
+                            Service Tech
+                        </Popup>
+                    </Marker>
                     <Marker
                         ref={this.initializeAppointmentMarker}
                         position={[this.state.Appointment.Latitude, this.state.Appointment.Longitude]}
                         draggable={true}
-                    />
+                    >
+                        <Popup>
+                            Appointment
+                        </Popup>
+                    </Marker>
                 </Map>
                 <button className={"ChangeDataButton"} onClick={this.openPopup.bind(this)}>Change Data</button>
                 <Dialog 
